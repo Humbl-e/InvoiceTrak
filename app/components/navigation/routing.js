@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
-import {View, Text} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
+import React, { useEffect } from 'react';
+import { View, Text } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../Home/HomeScreen';
 
 const Stack = createStackNavigator();
@@ -18,7 +18,7 @@ export function AppStack() {
     <Stack.Navigator
       headerMode="none"
       mode="modal"
-      screenOptions={{gestureEnabled: false}}>
+      screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );

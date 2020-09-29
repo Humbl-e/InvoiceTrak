@@ -1,25 +1,60 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import FormButton from '../global/FormButton';
+import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
+import {windowHeight, windowWidth} from '../../utilities/Dimensions';
+import AddButton from '../global/AddButton';
 
-export default function HomeScreen() {
+const FirstRoute = () => <View style={[styles.scene]} />;
+
+const SecondRoute = () => <View style={[styles.scene]} />;
+const ThirdRoute = () => <View style={[styles.scene]} />;
+
+const initialLayout = {width: windowWidth, height: windowHeight};
+
+const renderTabBar = (props) => (
+  <TabBar
+    {...props}
+    indicatorStyle={{backgroundColor: 'white'}}
+    style={{backgroundColor: '#2F4F4F'}}
+  />
+);
+
+export default function HomeScreen({navigation}) {
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    {key: 'first', title: 'All'},
+    {key: 'second', title: 'Outstanding'},
+    {key: 'third', title: 'Paid'},
+  ]);
+
+  const renderScene = SceneMap({
+    first: FirstRoute,
+    second: SecondRoute,
+    third: ThirdRoute,
+  });
+
+  const goToInvoice = () => {
+    navigation.navigate('Invoice');
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Welcome user</Text>
-      <FormButton buttonTitle="Logout" onPress={() => console.log('welcome')} />
+    <View style={{flex: 1}}>
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={initialLayout}
+        style={{flex: 1}}
+        sceneContainerStyle={{backgroundColor: '#c8c8c8'}}
+        renderTabBar={renderTabBar}
+      />
+      <AddButton onPress={goToInvoice} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scene: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f1',
-  },
-  text: {
-    fontSize: 20,
-    color: '#333333',
   },
 });

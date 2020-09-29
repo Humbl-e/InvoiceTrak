@@ -8,6 +8,7 @@ target 'InvoiceTrak' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+
   target 'InvoiceTrakTests' do
     inherit! :complete
     # Pods for testing
