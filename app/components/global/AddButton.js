@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Icon} from 'native-base';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Icon } from 'native-base';
 
 const buttonSize = 60;
 
@@ -18,10 +18,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
-export default function AddButton({onPress}) {
+export default function AddButton({ onPress }) {
   const shadowStyle = {
     shadowColor: '#000', // IOS
-    shadowOffset: {height: 5, width: 0}, // IOS
+    shadowOffset: { height: 5, width: 0 }, // IOS
     shadowOpacity: 0.35, // IOS
     shadowRadius: 3, // IOS
     elevation: 5, // ANDROID
@@ -37,11 +37,7 @@ export default function AddButton({onPress}) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[buttonStyle, shadowStyle]}
-        activeOpacity={0.85}
-        onPress={() => onPress()}
-        disabled={!onPress}>
+      <TouchableOpacity style={[buttonStyle, shadowStyle]} activeOpacity={0.85} onPress={() => onPress()} disabled={!onPress}>
         <Icon name="md-add" style={styles.icon} />
       </TouchableOpacity>
     </View>

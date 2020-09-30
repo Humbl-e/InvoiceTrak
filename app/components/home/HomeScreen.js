@@ -1,30 +1,39 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
-import {windowHeight, windowWidth} from '../../utilities/Dimensions';
+import { View, Text, StyleSheet } from 'react-native';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import { windowHeight, windowWidth } from '../../utilities/Dimensions';
 import AddButton from '../global/AddButton';
+import { InvoicesAllTab, InvoicesPaidTab, InvoicesUnpaidTab } from '../tabs';
+import Colors from '../../styles/Colors';
 
-const FirstRoute = () => <View style={[styles.scene]} />;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
-const SecondRoute = () => <View style={[styles.scene]} />;
-const ThirdRoute = () => <View style={[styles.scene]} />;
+const FirstRoute = () => <InvoicesAllTab />;
 
-const initialLayout = {width: windowWidth, height: windowHeight};
+const SecondRoute = () => <InvoicesUnpaidTab />;
+const ThirdRoute = () => <InvoicesPaidTab />;
+
+const initialLayout = { width: windowWidth, height: windowHeight };
 
 const renderTabBar = (props) => (
   <TabBar
     {...props}
-    indicatorStyle={{backgroundColor: 'white'}}
-    style={{backgroundColor: '#2F4F4F'}}
+    indicatorStyle={{ backgroundColor: Colors.white }}
+    style={{ backgroundColor: Colors.slate }}
+    tabStyle={{ flex: 1, paddingHorizontal: -5 }}
   />
 );
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ navigation }) {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'first', title: 'All'},
-    {key: 'second', title: 'Outstanding'},
-    {key: 'third', title: 'Paid'},
+    { key: 'first', title: 'All' },
+    { key: 'second', title: 'Outstanding' },
+    { key: 'third', title: 'Paid' },
   ]);
 
   const renderScene = SceneMap({
@@ -38,23 +47,16 @@ export default function HomeScreen({navigation}) {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <TabView
-        navigationState={{index, routes}}
+        navigationState={{ index, routes }}
         renderScene={renderScene}
         onIndexChange={setIndex}
         initialLayout={initialLayout}
-        style={{flex: 1}}
-        sceneContainerStyle={{backgroundColor: '#c8c8c8'}}
+        sceneContainerStyle={{ backgroundColor: Colors.lightGrey }}
         renderTabBar={renderTabBar}
       />
       <AddButton onPress={goToInvoice} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-  },
-});

@@ -77,12 +77,7 @@ export default function ItemScreen({ navigation, route }) {
       <Form>
         <Item inlineLabel>
           <Label>Description:</Label>
-          <Input
-            placeholder="Description"
-            placeholderTextColor={placeholderColor}
-            onChangeText={setDescription}
-            value={description}
-          />
+          <Input placeholder="Description" placeholderTextColor={placeholderColor} onChangeText={setDescription} value={description} />
         </Item>
         <Item inlineLabel>
           <Label>Unit Cost:</Label>
@@ -96,13 +91,7 @@ export default function ItemScreen({ navigation, route }) {
         </Item>
         <Item inlineLabel last>
           <Label>Quantity:</Label>
-          <Input
-            placeholder="1"
-            placeholderTextColor={placeholderColor}
-            onChangeText={setQty}
-            value={qty}
-            keyboardType="number-pad"
-          />
+          <Input placeholder="1" placeholderTextColor={placeholderColor} onChangeText={setQty} value={qty} keyboardType="number-pad" />
         </Item>
       </Form>
       <View style={styles.footer}>

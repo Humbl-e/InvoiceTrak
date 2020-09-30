@@ -42,13 +42,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function InvoiceItem({
-  onPress,
-  description,
-  style,
-  item,
-  footer,
-}) {
+export default function InvoiceItem({ onPress, description, style, item, footer }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.btn} transparent onPress={onPress}>

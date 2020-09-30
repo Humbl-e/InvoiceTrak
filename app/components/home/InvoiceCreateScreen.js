@@ -1,29 +1,15 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView, Platform } from 'react-native';
+import { Container, Form, Item, Input, Label, Separator } from 'native-base';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { windowWidth } from '../../utilities/Dimensions';
-
-import {
-  Container,
-  Content,
-  Form,
-  Item,
-  Input,
-  Label,
-  Separator,
-} from 'native-base';
-
+import Colors from '../../styles/Colors';
+import Loading from '../global/Loading';
 import InvoiceItem from '../global/InvoiceItem';
+import FormButton from '../global/FormButton';
+import DateHolder from '../global/DateHolder';
 
 let invoice = '0001';
-const getInvoiceNumber = () => {
-  return invoice++;
-};
 
 const mockCustomerData = [
   {
@@ -35,15 +21,15 @@ const mockCustomerData = [
     unitCost: 0.75,
     amount: '25.99',
   },
-  // {
-  //   id: '2',
-  //   dueDate: '20/10/2018',
-  //   customer: 'Terry Ltd',
-  //   qty: 20,
-  //   description: 'Building materials',
-  //   unitCost: 0.25,
-  //   amount: '50.00',
-  // },
+  {
+    id: '2',
+    dueDate: '20/10/2018',
+    customer: 'Terry Ltd',
+    qty: 20,
+    description: 'Building materials',
+    unitCost: 0.25,
+    amount: '50.00',
+  },
   // {
   //   id: '3',
   //   dueDate: '20/10/2018',
@@ -67,39 +53,40 @@ const mockCustomerData = [
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    backgroundColor: 'grey',
-  },
-  touchable: {
-    flex: 1,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'orange',
     margin: 10,
-    borderRadius: 15,
+  },
+  btnContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    marginBottom: 20,
   },
 });
 
-const Details = ({ title }) => {
-  console.log('tet', title);
-  return (
-    <View style={styles.row}>
-      <Text style={{ maxWidth: windowWidth / 4 }}>QTY</Text>
-      <Text>Description</Text>
-      <Text>Unit Cost</Text>
-      <Text>Amount</Text>
-    </View>
-  );
-};
-
 export default function InvoiceCreateScreen({ navigation }) {
+  const [paid, setPaid] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const changePaid = () => {
+    setPaid((prevState) => !prevState);
+  };
+
+  const showMode = () => {
+    setShow(true);
+  };
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const saveInvoice = () => {
+    console.log('saving invoice');
+  };
+
   const goToItem = ({ item, index }) => {
     if (item) {
       navigation.navigate('Item', { item, index });
@@ -117,9 +104,13 @@ export default function InvoiceCreateScreen({ navigation }) {
     return <InvoiceItem footer onPress={goToItem} />;
   };
 
+  // const isNotValid = () => {
+  //   return !
+  // };
+
   return (
-    <Container style={{ margin: 10 }}>
-      <Content>
+    <Container style={styles.container}>
+      <ScrollView>
         <Separator style={{ flex: 0.05 }}>
           <Text>Details</Text>
         </Separator>
@@ -134,33 +125,26 @@ export default function InvoiceCreateScreen({ navigation }) {
           </Item>
           <Item inlineLabel last>
             <Label>Date</Label>
-            <Input />
+            <DateHolder date={date} onPress={showMode} />
           </Item>
         </Form>
         <Separator style={{ flex: 0.05 }}>
           <Text>Invoice Details</Text>
         </Separator>
         <FlatList
-          style={{ flex: 1 }}
           data={mockCustomerData}
           extraData={mockCustomerData}
           scrollEnabled={false}
           renderItem={renderItem}
           ListFooterComponent={renderFooter}
         />
-        <View
-          style={{
-            flex: 1,
-            borderWidth: 1,
-            // minHeight: 50,
-          }}>
-          <TouchableOpacity style={styles.touchable}>
-            <View>
-              <Text>Mark Paid</Text>
-            </View>
-          </TouchableOpacity>
+        <View style={styles.btnContainer}>
+          <FormButton style={{ backgroundColor: paid ? 'green' : Colors.slate }} title="Mark as Paid" onPress={changePaid} />
+          <FormButton title="Save Invoice" onPress={saveInvoice} />
         </View>
-      </Content>
+      </ScrollView>
+      {show && <DateTimePicker value={date} is24Hour={true} display="default" onChange={onChange} />}
+      {loading && <Loading />}
     </Container>
   );
 }

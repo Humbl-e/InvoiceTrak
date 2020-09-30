@@ -15,10 +15,7 @@ export function AuthStack() {
 
 export function AppStack() {
   return (
-    <Stack.Navigator
-      headerMode="none"
-      mode="modal"
-      screenOptions={{ gestureEnabled: false }}>
+    <Stack.Navigator headerMode="none" mode="modal" screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
     </Stack.Navigator>
   );
