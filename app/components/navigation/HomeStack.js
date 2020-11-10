@@ -18,6 +18,7 @@ export default function AuthStack() {
         headerTitleStyle: { color: 'white' },
         headerBackTitleStyle: { color: 'white' },
         headerTintColor: 'white',
+        headerTitleAlign: 'center',
       }}>
       <Stack.Screen name="Invoices" component={HomeScreen} />
       <Stack.Screen name="Invoice" component={InvoiceCreateScreen} />
