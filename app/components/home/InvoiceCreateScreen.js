@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, Platform } from 'react-native';
 import { Container, Form, Item, Input, Label, Separator } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { windowWidth } from '../../utilities/Dimensions';
 import Colors from '../../styles/Colors';
 import Loading from '../global/Loading';
-import InvoiceItem from '../global/InvoiceItem';
+import InvoiceListItem from '../global/InvoiceListItem';
 import FormButton from '../global/FormButton';
 import DateHolder from '../global/DateHolder';
 
 let invoice = '0001';
 
 const mockCustomerData = [
-  {
-    id: '1',
-    dueDate: '20/10/2018',
-    customer: 'Terry Ltd',
-    qty: 15,
-    description: 'Building materials',
-    unitCost: 0.75,
-    amount: '25.99',
-  },
-  {
-    id: '2',
-    dueDate: '20/10/2018',
-    customer: 'Terry Ltd',
-    qty: 20,
-    description: 'Building materials',
-    unitCost: 0.25,
-    amount: '50.00',
-  },
+  // {
+  //   id: '1',
+  //   dueDate: '20/10/2018',
+  //   customer: 'Terry Ltd',
+  //   qty: 15,
+  //   description: 'Building materials',
+  //   unitCost: 0.75,
+  //   amount: '25.99',
+  // },
+  // {
+  //   id: '2',
+  //   dueDate: '20/10/2018',
+  //   customer: 'Terry Ltd',
+  //   qty: 20,
+  //   description: 'Building materials',
+  //   unitCost: 0.25,
+  //   amount: '50.00',
+  // },
   // {
   //   id: '3',
   //   dueDate: '20/10/2018',
@@ -63,11 +63,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function InvoiceCreateScreen({ navigation }) {
+export default function InvoiceCreateScreen({ navigation, route }) {
   const [paid, setPaid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
+  const [InvoiceDetails, setInvoiceDetails] = useState(mockCustomerData);
 
   const changePaid = () => {
     setPaid((prevState) => !prevState);
@@ -87,26 +88,34 @@ export default function InvoiceCreateScreen({ navigation }) {
     console.log('saving invoice');
   };
 
-  const goToItem = ({ item, index }) => {
+  const goToInvoiceDetail = ({ item, index }) => {
     if (item) {
-      navigation.navigate('Item', { item, index });
+      navigation.navigate('Invoice Detail', { item, index });
     } else {
-      navigation.navigate('Item');
+      navigation.navigate('Invoice Detail');
     }
   };
 
   const renderItem = ({ item, index }) => {
     console.log(item);
-    return <InvoiceItem onPress={() => goToItem({ item, index })} />;
+    return <InvoiceListItem onPress={() => goToInvoiceDetail({ item, index })} />;
   };
 
   const renderFooter = () => {
-    return <InvoiceItem footer onPress={goToItem} />;
+    return <InvoiceListItem footer onPress={goToInvoiceDetail} />;
   };
 
   // const isNotValid = () => {
   //   return !
   // };
+  useEffect(() => {
+    if (route.params?.invoiceDetailItem) {
+      const newItem = route.params.invoiceDetailItem;
+      console.log(route.params.invoiceDetailItem);
+      const newInvoiceDetails = InvoiceDetails.concat(newItem);
+      console.log(newInvoiceDetails);
+    }
+  }, [route.params?.invoiceDetailItem, InvoiceDetails]);
 
   return (
     <Container style={styles.container}>
@@ -132,8 +141,8 @@ export default function InvoiceCreateScreen({ navigation }) {
           <Text>Invoice Details</Text>
         </Separator>
         <FlatList
-          data={mockCustomerData}
-          extraData={mockCustomerData}
+          data={InvoiceDetails}
+          extraData={InvoiceDetails}
           scrollEnabled={false}
           renderItem={renderItem}
           ListFooterComponent={renderFooter}

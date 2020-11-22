@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../home/HomeScreen';
 import InvoiceCreateScreen from '../home/InvoiceCreateScreen';
-import ItemScreen from '../home/ItemScreen';
+import InvoiceDetailScreen from '../home/InvoiceDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,8 +21,8 @@ export default function AuthStack() {
         headerTitleAlign: 'center',
       }}>
       <Stack.Screen name="Invoices" component={HomeScreen} />
-      <Stack.Screen name="Invoice" component={InvoiceCreateScreen} />
-      <Stack.Screen name="Item" component={ItemScreen} />
+      <Stack.Screen name="Add Invoice" component={InvoiceCreateScreen} />
+      <Stack.Screen name="Invoice Detail" component={InvoiceDetailScreen} />
     </Stack.Navigator>
   );
 }

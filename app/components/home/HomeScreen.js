@@ -43,7 +43,7 @@ export default function HomeScreen({ navigation }) {
   });
 
   const goToInvoice = () => {
-    navigation.navigate('Invoice');
+    navigation.navigate('Add Invoice');
   };
 
   return (

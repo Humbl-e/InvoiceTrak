@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button } from 'native-base';
+import Colors from '../../styles/Colors';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,22 +43,23 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function InvoiceItem({ onPress, description, style, item, footer }) {
+export default function InvoiceListItem({ onPress, description, style, item, footer }) {
+  const footerTextColor = footer ? { color: Colors.lightGrey } : { color: Colors.black };
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.btn} transparent onPress={onPress}>
+      <TouchableOpacity style={styles.btn} onPress={onPress}>
         <View style={{ flex: 1 }}>
           <View style={styles.row}>
-            <Text style={styles.text}>Add Item</Text>
-            <Text style={styles.text}>0 x £0.00</Text>
+            <Text style={[styles.text, footerTextColor]}>Add Item</Text>
+            <Text style={[styles.text, footerTextColor]}>0 x £0.00</Text>
           </View>
-          <Text style={styles.textTotal}>GO</Text>
+          <Text style={[styles.textTotal, footerTextColor]}>GO</Text>
         </View>
       </TouchableOpacity>
       {footer && (
         <View style={styles.footer}>
           <Text style={styles.textFooter}>SubTotal</Text>
-          <Text style={styles.textFooter}>£52.50</Text>
+          <Text style={styles.textFooter}>INVOICE TOTAL</Text>
         </View>
       )}
     </View>
