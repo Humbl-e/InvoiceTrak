@@ -12,15 +12,15 @@ import DateHolder from '../global/DateHolder';
 let invoice = '0001';
 
 const mockCustomerData = [
-  // {
-  //   id: '1',
-  //   dueDate: '20/10/2018',
-  //   customer: 'Terry Ltd',
-  //   qty: 15,
-  //   description: 'Building materials',
-  //   unitCost: 0.75,
-  //   amount: '25.99',
-  // },
+  {
+    id: '1',
+    dueDate: '20/10/2018',
+    customer: 'Terry Ltd',
+    qty: 15,
+    description: 'Building materials',
+    unitCost: 0.75,
+    amount: '25.99',
+  },
   // {
   //   id: '2',
   //   dueDate: '20/10/2018',
@@ -105,15 +105,12 @@ export default function InvoiceCreateScreen({ navigation, route }) {
     return <InvoiceListItem footer onPress={goToInvoiceDetail} />;
   };
 
-  // const isNotValid = () => {
-  //   return !
-  // };
   useEffect(() => {
     if (route.params?.invoiceDetailItem) {
       const newItem = route.params.invoiceDetailItem;
-      console.log(route.params.invoiceDetailItem);
-      const newInvoiceDetails = InvoiceDetails.concat(newItem);
-      console.log(newInvoiceDetails);
+      console.log('new item received', route.params.invoiceDetailItem);
+      // const newInvoiceDetails = InvoiceDetails.concat(newItem);
+      // console.log(InvoiceDetails);
     }
   }, [route.params?.invoiceDetailItem, InvoiceDetails]);
 

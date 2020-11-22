@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     minHeight: 35,
     padding: 15,
+    marginTop: 10,
   },
   row: {
     flexDirection: 'row',
@@ -35,16 +36,17 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 30,
+    margin: 50,
   },
 });
-
-const placeholderColor = '#c8c8c8';
 
 export default function InvoiceDetailScreen({ navigation, route, footer }) {
   // console.log('nav', route.params);
   const [description, setDescription] = useState('');
-  const [unitCost, setUnitCost] = useState('');
+  const [receivedDesc, setReceivedDesc] = useState(false);
+  const [receivedUc, setReceivedUc] = useState(false);
+
+  const [unitCost, setUnitCost] = useState(0);
   const [qty, setQty] = useState(1);
   const [subtotal, setSubtotal] = useState(0);
 
@@ -59,13 +61,12 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
     };
     navigation.navigate('Add Invoice', { invoiceDetailItem: invoiceDetailItem });
   };
-  const isValid = () => {
-    return description && unitCost && qty;
-  };
 
   useEffect(() => {
+    const formatted = unitCost * qty;
+    const price = formatted.toFixed(2);
     if (unitCost) {
-      setSubtotal(unitCost * qty);
+      setSubtotal(price);
     } else {
       setSubtotal('0.00');
     }
@@ -80,32 +81,39 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
         <Form>
           <Item inlineLabel>
             <Label>Description:</Label>
-            <Input placeholder="Description" placeholderTextColor={placeholderColor} onChangeText={setDescription} value={description} />
+            <Input
+              placeholder="Description"
+              placeholderTextColor={Colors.lightGrey}
+              onChangeText={setDescription}
+              value={description}
+              onBlur={setReceivedDesc}
+            />
           </Item>
+          {!description && receivedDesc && (
+            <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Description is required</Text>
+          )}
+
           <Item inlineLabel>
             <Label>Unit Cost:</Label>
             <Input
               placeholder="£0.00"
-              placeholderTextColor={placeholderColor}
+              placeholderTextColor={Colors.lightGrey}
               onChangeText={setUnitCost}
               value={unitCost}
               keyboardType="numeric"
+              onBlur={setReceivedUc}
             />
           </Item>
-          <Item inlineLabel last>
+          {!unitCost && receivedUc && <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Unit Cost is required</Text>}
+          <Item inlineLabel last error={qty === '0'}>
             <Label>Quantity:</Label>
-            <Input
-              placeholder="1"
-              placeholderTextColor={placeholderColor}
-              onChangeText={(e) => (e > 0 ? setQty(e) : setQty(1))}
-              value={qty}
-              keyboardType="number-pad"
-            />
+            <Input placeholder="1" placeholderTextColor={Colors.lightGrey} onChangeText={setQty} value={qty} keyboardType="decimal-pad" />
           </Item>
+          {qty === '0' && <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Quantity must be a valid number</Text>}
         </Form>
         <View style={styles.footer}>
-          <Text style={styles.textFooter}>SubTotal:</Text>
-          <Text style={styles.textFooter}>{`£${subtotal || '0.00'}`}</Text>
+          <Text style={styles.textFooter}>Total:</Text>
+          <Text style={styles.textFooter}>{`£${subtotal}`}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.textSwitch}>Save Item: </Text>
@@ -118,7 +126,7 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
           />
         </View>
         <View style={styles.button}>
-          <FormButton title="Done" onPress={done} disabled={!isValid} />
+          <FormButton title="Done" onPress={done} />
         </View>
       </ScrollView>
     </Container>
