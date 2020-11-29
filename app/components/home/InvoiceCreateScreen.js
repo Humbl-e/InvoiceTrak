@@ -97,7 +97,7 @@ export default function InvoiceCreateScreen({ navigation, route }) {
   };
 
   const renderItem = ({ item, index }) => {
-    console.log(item);
+    // console.log(item);
     return <InvoiceListItem onPress={() => goToInvoiceDetail({ item, index })} />;
   };
 
@@ -108,7 +108,7 @@ export default function InvoiceCreateScreen({ navigation, route }) {
   useEffect(() => {
     if (route.params?.invoiceDetailItem) {
       const newItem = route.params.invoiceDetailItem;
-      console.log('new item received', route.params.invoiceDetailItem);
+      // console.log('new item received', route.params.invoiceDetailItem);
       // const newInvoiceDetails = InvoiceDetails.concat(newItem);
       // console.log(InvoiceDetails);
     }

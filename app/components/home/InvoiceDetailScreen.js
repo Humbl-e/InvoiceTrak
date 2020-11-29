@@ -46,20 +46,32 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
   const [receivedDesc, setReceivedDesc] = useState(false);
   const [receivedUc, setReceivedUc] = useState(false);
 
-  const [unitCost, setUnitCost] = useState(0);
-  const [qty, setQty] = useState(1);
+  const [unitCost, setUnitCost] = useState('');
+  const [qty, setQty] = useState('');
   const [subtotal, setSubtotal] = useState(0);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const done = () => {
+    const isValid = Boolean(description && unitCost && qty);
+    if (!isValid) {
+      if (!(receivedDesc && receivedUc)) {
+        setReceivedDesc(true);
+        setReceivedUc(true);
+      } else if (!qty) {
+        setQty('0');
+      }
+    }
+
     const invoiceDetailItem = {
       description,
       unitCost,
       qty,
     };
-    navigation.navigate('Add Invoice', { invoiceDetailItem: invoiceDetailItem });
+    if (isValid) {
+      navigation.navigate('Add Invoice', { invoiceDetailItem: invoiceDetailItem });
+    }
   };
 
   useEffect(() => {
@@ -85,6 +97,7 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
               placeholder="Description"
               placeholderTextColor={Colors.lightGrey}
               onChangeText={setDescription}
+              maxLength={60}
               value={description}
               onBlur={setReceivedDesc}
             />
@@ -107,7 +120,7 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
           {!unitCost && receivedUc && <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Unit Cost is required</Text>}
           <Item inlineLabel last error={qty === '0'}>
             <Label>Quantity:</Label>
-            <Input placeholder="1" placeholderTextColor={Colors.lightGrey} onChangeText={setQty} value={qty} keyboardType="decimal-pad" />
+            <Input placeholder="0" placeholderTextColor={Colors.lightGrey} onChangeText={setQty} value={qty} keyboardType="decimal-pad" />
           </Item>
           {qty === '0' && <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Quantity must be a valid number</Text>}
         </Form>

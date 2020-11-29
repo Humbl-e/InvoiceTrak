@@ -6,7 +6,7 @@ import InvoiceDetailScreen from '../home/InvoiceDetailScreen';
 
 const Stack = createStackNavigator();
 
-export default function AuthStack() {
+export default function HomeStack() {
   return (
     <Stack.Navigator
       screenOptions={{
