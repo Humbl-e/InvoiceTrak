@@ -40,21 +40,20 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function InvoiceDetailScreen({ navigation, route, footer }) {
-  // console.log('nav', route.params);
+export default function InvoiceDetailScreen({ navigation, route }) {
   const [description, setDescription] = useState('');
   const [receivedDesc, setReceivedDesc] = useState(false);
   const [receivedUc, setReceivedUc] = useState(false);
 
   const [unitCost, setUnitCost] = useState('');
   const [qty, setQty] = useState('');
-  const [subtotal, setSubtotal] = useState(0);
+  const [subTotal, setSubtotal] = useState(0);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const done = () => {
-    const isValid = Boolean(description && unitCost && qty);
+    const isValid = Boolean(description && Number.parseFloat(unitCost) && Number.parseFloat(qty));
     if (!isValid) {
       if (!(receivedDesc && receivedUc)) {
         setReceivedDesc(true);
@@ -63,14 +62,17 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
         setQty('0');
       }
     }
+    const cost = Number.parseFloat(unitCost).toFixed(2);
 
     const invoiceDetailItem = {
       description,
-      unitCost,
+      unitCost: cost,
       qty,
+      subTotal,
     };
     if (isValid) {
-      navigation.navigate('Add Invoice', { invoiceDetailItem: invoiceDetailItem });
+      route.params.updateDetails(invoiceDetailItem);
+      navigation.goBack();
     }
   };
 
@@ -117,18 +119,22 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
               onBlur={setReceivedUc}
             />
           </Item>
-          {!unitCost && receivedUc && <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Unit Cost is required</Text>}
-          <Item inlineLabel last error={qty === '0'}>
+          {(!unitCost || Number.parseFloat(unitCost) <= 0) && receivedUc && (
+            <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Unit Cost is required</Text>
+          )}
+          <Item inlineLabel last>
             <Label>Quantity:</Label>
             <Input placeholder="0" placeholderTextColor={Colors.lightGrey} onChangeText={setQty} value={qty} keyboardType="decimal-pad" />
           </Item>
-          {qty === '0' && <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Quantity must be a valid number</Text>}
+          {Number.parseFloat(qty) <= 0 && (
+            <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Quantity must be a valid number</Text>
+          )}
         </Form>
         <View style={styles.footer}>
           <Text style={styles.textFooter}>Total:</Text>
-          <Text style={styles.textFooter}>{`£${subtotal}`}</Text>
+          <Text style={styles.textFooter}>{`£${subTotal}`}</Text>
         </View>
-        <View style={styles.row}>
+        {/* <View style={styles.row}>
           <Text style={styles.textSwitch}>Save Item: </Text>
           <Switch
             trackColor={{ false: '#767577', true: '#00a09da4' }}
@@ -137,7 +143,7 @@ export default function InvoiceDetailScreen({ navigation, route, footer }) {
             onValueChange={toggleSwitch}
             value={isEnabled}
           />
-        </View>
+        </View> */}
         <View style={styles.button}>
           <FormButton title="Done" onPress={done} />
         </View>

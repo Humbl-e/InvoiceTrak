@@ -5,7 +5,11 @@ import { windowHeight, windowWidth } from '../../utilities/Dimensions';
 
 export default function FormButton({ title, disabled, onPress, style, ...props }) {
   return (
-    <TouchableOpacity style={[styles.buttonContainer, style]} {...props} disabled={disabled} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.buttonContainer, { backgroundColor: disabled ? Colors.lightGrey : Colors.slate }, style]}
+      {...props}
+      disabled={disabled}
+      onPress={onPress}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );

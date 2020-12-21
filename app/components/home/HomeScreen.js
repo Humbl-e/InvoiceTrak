@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { windowHeight, windowWidth } from '../../utilities/Dimensions';
 import AddButton from '../global/AddButton';
 import { InvoicesAllTab, InvoicesPaidTab, InvoicesUnpaidTab } from '../tabs';
 import Colors from '../../styles/Colors';
+import { InvoiceContext } from '../store/InvoiceProvider';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,6 +31,8 @@ const renderTabBar = (props) => (
 
 export default function HomeScreen({ navigation }) {
   const [index, setIndex] = React.useState(0);
+  const { invoices, dispatch } = useContext(InvoiceContext);
+
   const [routes] = React.useState([
     { key: 'first', title: 'All' },
     { key: 'second', title: 'Outstanding' },

@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
+import InvoiceProvider from './app/components/store/InvoiceProvider';
 
 LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
@@ -21,12 +22,14 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.container} accessibility="app">
-      <StatusBar barStyle={'light-content'} />
-      <NavigationContainer ref={navigationRef}>
-        <HomeStack />
-      </NavigationContainer>
-    </View>
+    <InvoiceProvider>
+      <View style={styles.container} accessibility="app">
+        <StatusBar barStyle={'light-content'} />
+        <NavigationContainer ref={navigationRef}>
+          <HomeStack />
+        </NavigationContainer>
+      </View>
+    </InvoiceProvider>
   );
 }
 

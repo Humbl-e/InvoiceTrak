@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Button } from 'native-base';
 import Colors from '../../styles/Colors';
 
 const styles = StyleSheet.create({
@@ -29,39 +28,21 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: 'right',
   },
-  footer: {
-    flex: 1,
-    backgroundColor: 'grey',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: 35,
-    padding: 5,
-  },
-  textFooter: {
-    fontSize: 16,
-  },
 });
 
-export default function InvoiceListItem({ onPress, description, style, item, footer }) {
+export default function InvoiceListItem({ onPress, item, footer }) {
   const footerTextColor = footer ? { color: Colors.lightGrey } : { color: Colors.black };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <TouchableOpacity style={styles.btn} onPress={onPress}>
         <View style={{ flex: 1 }}>
           <View style={styles.row}>
-            <Text style={[styles.text, footerTextColor]}>Add Item</Text>
-            <Text style={[styles.text, footerTextColor]}>0 x £0.00</Text>
+            <Text style={[styles.text, footerTextColor]}>{footer ? 'Add Item' : item.description}</Text>
+            <Text style={[styles.text, footerTextColor]}>{footer ? '0 x £0.00' : `${item.qty} x £${item.unitCost}`}</Text>
           </View>
-          <Text style={[styles.textTotal, footerTextColor]}>GO</Text>
+          <Text style={[styles.textTotal, footerTextColor]}>{footer ? '£0.00' : `£${item.subTotal}`}</Text>
         </View>
       </TouchableOpacity>
-      {footer && (
-        <View style={styles.footer}>
-          <Text style={styles.textFooter}>SubTotal</Text>
-          <Text style={styles.textFooter}>INVOICE TOTAL</Text>
-        </View>
-      )}
     </View>
   );
 }
