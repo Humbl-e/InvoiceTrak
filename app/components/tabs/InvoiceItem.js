@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Colors from '../../styles/Colors';
 import { windowWidth } from '../../utilities/Dimensions';
@@ -7,7 +7,6 @@ import { InvoiceContext } from '../store/InvoiceProvider';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // borderBottomWidth: 0.5,
     borderBottomColor: 'grey',
     padding: 10,
     marginVertical: 5,
@@ -35,18 +34,30 @@ export default function InvoiceItem({ item, index }) {
   const { data } = useContext(InvoiceContext);
   const invoice = data.invoices.byId;
   const invoiceDetails = invoice[item].details;
+  const [stringDetails, setStringDetails] = useState('');
+
+  useEffect(() => {
+    let stringArray = [];
+    invoiceDetails.forEach((element) => {
+      stringArray.push(element.description);
+    });
+    const stringifiedDetails = stringArray.join(', ');
+    setStringDetails(stringifiedDetails);
+  }, [invoiceDetails]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{invoice[item].id}</Text>
       <View style={styles.row}>
-        <Text style={styles.textTotal}>{invoice[item].clientName}</Text>
-        <Text style={styles.textTotal}>{`£${invoice[item].total}`}</Text>
+        <Text style={styles.textTotal} numberOfLines={1}>
+          {invoice[item].clientName}
+        </Text>
+        <Text style={styles.textTotal} numberOfLines={1}>{`£${invoice[item].total}`}</Text>
       </View>
-      <View style={{ flexDirection: 'row' }}>
-        {invoiceDetails.map((element, pos) => {
-          return <Text key={pos} numberOfLines={1} ellipsizeMode="tail" style={[[styles.text]]}>{`${element.description}, `}</Text>;
-        })}
+      <View style={{ flexDirection: 'row', maxWidth: windowWidth / 2 + 50 }}>
+        <Text style={[styles.text]} numberOfLines={1}>
+          {stringDetails}
+        </Text>
       </View>
     </View>
   );
