@@ -4,3 +4,4 @@ export const EDIT_INVOICE = 'EDIT_INVOICE';
 export const ADD_DETAILS = 'ADD_DETAILS';
 export const RESET_DETAILS = 'RESET_DETAILS';
 export const SET_INVOICE_TOTAL = 'SET_INVOICE_TOTAL';
+export const SET_LOADING = 'SET_LOADING';

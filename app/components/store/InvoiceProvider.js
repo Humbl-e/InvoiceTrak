@@ -4,6 +4,13 @@ import * as actionType from '../config/actionTypes';
 
 export const InvoiceContext = createContext();
 
+export const set_Loading = (loading) => {
+  return {
+    type: actionType.SET_LOADING,
+    loading,
+  };
+};
+
 const initalState = {
   invoices: {
     byId: {},
@@ -11,11 +18,11 @@ const initalState = {
   },
   invoiceDetails: [],
   invoiceTotal: '0.00',
-  lastInvoice: '0001',
+  lastInvoice: '00001',
+  loading: false,
 };
 
 const invoiceReducer = (state, action) => {
-  console.log('action: ', action);
   switch (action.type) {
     case actionType.ADD_INVOICE:
       const zeroPad = (num, places) => String(num).padStart(places, '0');
@@ -24,7 +31,6 @@ const invoiceReducer = (state, action) => {
         ...state.invoices.byId,
         [action.payload.id]: action.payload,
       };
-      console.log(byId);
       return {
         ...state,
         invoices: {
@@ -51,6 +57,8 @@ const invoiceReducer = (state, action) => {
       return state;
     case actionType.SET_INVOICE_TOTAL:
       return { ...state, invoiceTotal: action.payload.invoiceTotal };
+    case actionType.SET_LOADING:
+      return { ...state, loading: action.loading };
     default:
       return state;
   }

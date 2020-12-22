@@ -8,7 +8,7 @@ import Loading from '../global/Loading';
 import InvoiceListItem from '../global/InvoiceListItem';
 import FormButton from '../global/FormButton';
 import DateHolder from '../global/DateHolder';
-import { InvoiceContext } from '../store/InvoiceProvider';
+import { InvoiceContext, set_Loading } from '../store/InvoiceProvider';
 import { ADD_DETAILS, ADD_INVOICE } from '../config/actionTypes';
 
 const mockCustomerData = [
@@ -78,15 +78,14 @@ const styles = StyleSheet.create({
 export default function InvoiceCreateScreen({ navigation, route }) {
   const [paid, setPaid] = useState(false);
   const [clientName, setClientName] = useState('');
-  const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
   const { data, dispatch } = useContext(InvoiceContext);
   const invoiceNumber = data.lastInvoice;
 
-  console.log('invoiceNumber', invoiceNumber);
-  console.log('data', data.invoices);
+  // console.log('invoiceNumber', invoiceNumber);
+  // console.log('data', data.invoices);
 
   const changePaid = () => {
     setPaid((prevState) => !prevState);
@@ -110,7 +109,7 @@ export default function InvoiceCreateScreen({ navigation, route }) {
       date: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
       isPaid: paid,
       details: data.invoiceDetails,
-      Total: data.invoiceTotal,
+      total: data.invoiceTotal,
     };
     dispatch({ type: ADD_INVOICE, payload: invoice });
     navigation.goBack();
@@ -178,7 +177,6 @@ export default function InvoiceCreateScreen({ navigation, route }) {
         </View>
       </ScrollView>
       {show && <DateTimePicker value={date} is24Hour={true} display="default" onChange={onChange} />}
-      {loading && <Loading />}
     </Container>
   );
 }

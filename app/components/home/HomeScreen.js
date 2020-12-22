@@ -31,7 +31,7 @@ const renderTabBar = (props) => (
 
 export default function HomeScreen({ navigation }) {
   const [index, setIndex] = React.useState(0);
-  const { invoices, dispatch } = useContext(InvoiceContext);
+  const { data, dispatch } = useContext(InvoiceContext);
 
   const [routes] = React.useState([
     { key: 'first', title: 'All' },

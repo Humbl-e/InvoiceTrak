@@ -1,13 +1,10 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Colors from '../../styles/Colors';
 
-export default function Loading() {
-  return (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color={Colors.slate} />
-    </View>
-  );
+export default function Loading({ loading }) {
+  return <Spinner visible={loading} textContent={'Loading...'} textStyle={{ color: '#FFF' }} />;
 }
 
 const styles = StyleSheet.create({
