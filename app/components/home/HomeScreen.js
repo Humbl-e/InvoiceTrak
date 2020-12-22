@@ -13,11 +13,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const FirstRoute = () => <InvoicesAllTab />;
-
-const SecondRoute = () => <InvoicesUnpaidTab />;
-const ThirdRoute = () => <InvoicesPaidTab />;
-
 const initialLayout = { width: windowWidth, height: windowHeight };
 
 const renderTabBar = (props) => (
@@ -39,11 +34,18 @@ export default function HomeScreen({ navigation }) {
     { key: 'third', title: 'Paid' },
   ]);
 
-  const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-    third: ThirdRoute,
-  });
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case 'first':
+        return <InvoicesAllTab navigation={navigation} />;
+      case 'second':
+        return <InvoicesUnpaidTab navigation={navigation} />;
+      case 'third':
+        return <InvoicesPaidTab navigation={navigation} />;
+      default:
+        return null;
+    }
+  };
 
   const goToInvoice = () => {
     navigation.navigate('Add Invoice');

@@ -37,28 +37,66 @@ const invoiceReducer = (state, action) => {
           byId,
           allIds: Object.keys(byId),
         },
-        invoiceDetails: [],
-        invoiceTotal: '0.00',
         lastInvoice: invoiceNumber,
       };
+
     case actionType.REMOVE_INVOICE:
       console.log(action.id);
       return state.filter((invoice) => invoice.id !== action.id);
-    case actionType.EDIT_INVOICE:
-      console.log(action.id);
-      return state;
+
+    case actionType.UPDATE_INVOICE:
+      const id = action.payload.id;
+      state.invoices.byId[id] = action.payload;
+      return {
+        ...state,
+      };
+
     case actionType.ADD_DETAILS:
       const currentTotal = Number.parseFloat(state.invoiceTotal);
       const add = Number.parseFloat(action.payload.subTotal);
       const newTotal = (currentTotal + add).toFixed(2);
-      return { ...state, invoiceDetails: [...state.invoiceDetails, action.payload], invoiceTotal: newTotal };
+      return {
+        ...state,
+        invoiceDetails: [...state.invoiceDetails, action.payload],
+        invoiceTotal: newTotal,
+      };
+
+    case actionType.UPDATE_DETAILS:
+      const detailsArray = action.payload.details;
+      return {
+        ...state,
+        invoiceDetails: [...state.invoiceDetails, ...detailsArray],
+        invoiceTotal: action.payload.total,
+      };
+
+    case actionType.EDIT_DETAILS:
+      const index = action.payload.index;
+
+      const prevSubtotal = Number.parseFloat(state.invoiceDetails[index].subTotal);
+      const currInvoiceTotal = Number.parseFloat(state.invoiceTotal);
+      const editedTotal = Number.parseFloat(action.payload.subTotal);
+      const newEditedTotal = Math.abs(currInvoiceTotal - prevSubtotal + editedTotal).toFixed(2);
+
+      state.invoiceDetails[index] = action.payload;
+
+      return {
+        ...state,
+        invoiceTotal: newEditedTotal,
+      };
+
     case actionType.RESET_DETAILS:
-      console.log(action.id);
-      return state;
+      return {
+        ...state,
+        invoiceDetails: [],
+        invoiceTotal: '0.00',
+      };
+
     case actionType.SET_INVOICE_TOTAL:
       return { ...state, invoiceTotal: action.payload.invoiceTotal };
+
     case actionType.SET_LOADING:
       return { ...state, loading: action.loading };
+
     default:
       return state;
   }

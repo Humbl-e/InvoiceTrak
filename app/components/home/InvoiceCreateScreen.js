@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, Platform } from 'react-native';
 import { Container, Form, Item, Input, Label, Separator } from 'native-base';
@@ -9,7 +10,7 @@ import InvoiceListItem from '../global/InvoiceListItem';
 import FormButton from '../global/FormButton';
 import DateHolder from '../global/DateHolder';
 import { InvoiceContext, set_Loading } from '../store/InvoiceProvider';
-import { ADD_DETAILS, ADD_INVOICE } from '../config/actionTypes';
+import { ADD_DETAILS, ADD_INVOICE, EDIT_DETAILS, UPDATE_DETAILS, RESET_DETAILS, UPDATE_INVOICE } from '../config/actionTypes';
 
 const mockCustomerData = [
   // {
@@ -76,16 +77,40 @@ const styles = StyleSheet.create({
 });
 
 export default function InvoiceCreateScreen({ navigation, route }) {
-  const [paid, setPaid] = useState(false);
-  const [clientName, setClientName] = useState('');
-  const [date, setDate] = useState(new Date());
+  const { data, dispatch } = useContext(InvoiceContext);
+
+  const editMode = route.params?.editMode;
+  const id = route.params?.id;
+
+  const invoiceNumber = editMode ? id : data.lastInvoice;
+
+  const parts = data.invoices.byId[id]?.date?.split('/');
+  const dt = parts ? new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10)) : new Date();
+
+  const [paid, setPaid] = useState(editMode ? data.invoices.byId[id].isPaid : false);
+  const [clientName, setClientName] = useState(editMode ? data.invoices.byId[id].clientName : '');
+  const [date, setDate] = useState(editMode ? new Date(dt) : new Date());
   const [show, setShow] = useState(false);
 
-  const { data, dispatch } = useContext(InvoiceContext);
-  const invoiceNumber = data.lastInvoice;
+  useEffect(() => {
+    console.log('i run on first run');
+    if (editMode) {
+      const singleInvoice = data.invoices.byId[id];
+      dispatch({
+        type: UPDATE_DETAILS,
+        payload: {
+          details: singleInvoice.details,
+          total: singleInvoice.total,
+        },
+      });
+    }
+    return () => {
+      console.log('ill run at the end and delete the array...');
+      dispatch({ type: RESET_DETAILS });
+    };
+  }, []);
 
-  // console.log('invoiceNumber', invoiceNumber);
-  // console.log('data', data.invoices);
+  // console.log('invoice', data.invoices.byId[id]);
 
   const changePaid = () => {
     setPaid((prevState) => !prevState);
@@ -115,16 +140,34 @@ export default function InvoiceCreateScreen({ navigation, route }) {
     navigation.goBack();
   };
 
+  const updateInvoice = () => {
+    console.log('updating Invoice');
+    const updatedInvoice = {
+      id: invoiceNumber,
+      clientName,
+      date: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
+      isPaid: paid,
+      details: data.invoiceDetails,
+      total: data.invoiceTotal,
+    };
+    dispatch({ type: UPDATE_INVOICE, payload: updatedInvoice });
+    navigation.goBack();
+  };
+
   const goToInvoiceDetail = ({ item, index }) => {
     if (item) {
-      navigation.navigate('Invoice Detail', { item, index, updateDetails });
+      navigation.navigate('Invoice Detail', { item, index, addDetails, editDetails });
     } else {
-      navigation.navigate('Invoice Detail', { updateDetails });
+      navigation.navigate('Invoice Detail', { addDetails });
     }
   };
 
-  const updateDetails = (detail) => {
+  const addDetails = (detail) => {
     dispatch({ type: ADD_DETAILS, payload: detail });
+  };
+
+  const editDetails = (detail) => {
+    dispatch({ type: EDIT_DETAILS, payload: detail });
   };
 
   const renderItem = ({ item, index }) => {
@@ -173,7 +216,11 @@ export default function InvoiceCreateScreen({ navigation, route }) {
 
         <View style={styles.btnContainer}>
           <FormButton style={{ backgroundColor: paid ? Colors.green : Colors.red }} title={'Paid'} onPress={changePaid} />
-          <FormButton title="Save Invoice" onPress={saveInvoice} disabled={data.invoiceDetails.length < 1 || !clientName} />
+          <FormButton
+            title={editMode ? 'Update Invoice' : 'Save Invoice'}
+            onPress={editMode ? updateInvoice : saveInvoice}
+            disabled={data.invoiceDetails.length < 1 || !clientName}
+          />
         </View>
       </ScrollView>
       {show && <DateTimePicker value={date} is24Hour={true} display="default" onChange={onChange} />}

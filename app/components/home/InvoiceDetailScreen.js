@@ -41,13 +41,18 @@ const styles = StyleSheet.create({
 });
 
 export default function InvoiceDetailScreen({ navigation, route }) {
-  const [description, setDescription] = useState('');
-  const [receivedDesc, setReceivedDesc] = useState(false);
-  const [receivedUc, setReceivedUc] = useState(false);
+  const { item, index } = route.params;
 
-  const [unitCost, setUnitCost] = useState('');
-  const [qty, setQty] = useState('');
-  const [subTotal, setSubtotal] = useState(0);
+  // console.log('item is: ', item);
+  console.log('index is: ', index);
+
+  const [description, setDescription] = useState(item?.description ?? '');
+  const [receivedDesc, setReceivedDesc] = useState(item ? true : false);
+  const [receivedUc, setReceivedUc] = useState(item ? true : false);
+
+  const [unitCost, setUnitCost] = useState(item?.unitCost ?? '');
+  const [qty, setQty] = useState(item?.qty ?? '');
+  const [subTotal, setSubtotal] = useState(item?.subTotal ?? 0);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
@@ -71,7 +76,12 @@ export default function InvoiceDetailScreen({ navigation, route }) {
       subTotal,
     };
     if (isValid) {
-      route.params.updateDetails(invoiceDetailItem);
+      if (item) {
+        invoiceDetailItem.index = index;
+        route.params.editDetails(invoiceDetailItem);
+      } else {
+        route.params.addDetails(invoiceDetailItem);
+      }
       navigation.goBack();
     }
   };

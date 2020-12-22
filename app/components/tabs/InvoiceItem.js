@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from '../../styles/Colors';
 import { windowWidth } from '../../utilities/Dimensions';
 import { InvoiceContext } from '../store/InvoiceProvider';
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function InvoiceItem({ item, index }) {
+export default function InvoiceItem({ item, index, onPress }) {
   const { data } = useContext(InvoiceContext);
   const invoice = data.invoices.byId;
   const invoiceDetails = invoice[item].details;
@@ -46,19 +46,21 @@ export default function InvoiceItem({ item, index }) {
   }, [invoiceDetails]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{invoice[item].id}</Text>
-      <View style={styles.row}>
-        <Text style={styles.textTotal} numberOfLines={1}>
-          {invoice[item].clientName}
-        </Text>
-        <Text style={styles.textTotal} numberOfLines={1}>{`£${invoice[item].total}`}</Text>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.container}>
+        <Text style={styles.text}>{invoice[item].id}</Text>
+        <View style={styles.row}>
+          <Text style={styles.textTotal} numberOfLines={1}>
+            {invoice[item].clientName}
+          </Text>
+          <Text style={styles.textTotal} numberOfLines={1}>{`£${invoice[item].total}`}</Text>
+        </View>
+        <View style={{ flexDirection: 'row', maxWidth: windowWidth / 2 + 50 }}>
+          <Text style={[styles.text]} numberOfLines={1}>
+            {stringDetails}
+          </Text>
+        </View>
       </View>
-      <View style={{ flexDirection: 'row', maxWidth: windowWidth / 2 + 50 }}>
-        <Text style={[styles.text]} numberOfLines={1}>
-          {stringDetails}
-        </Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 }
