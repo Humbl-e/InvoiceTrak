@@ -1,55 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { Container, Form, Item, Input, Label, Separator } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { windowWidth } from '../../utilities/Dimensions';
 import Colors from '../../styles/Colors';
-import Loading from '../global/Loading';
 import InvoiceListItem from '../global/InvoiceListItem';
 import FormButton from '../global/FormButton';
 import DateHolder from '../global/DateHolder';
-import { InvoiceContext, set_Loading } from '../store/InvoiceProvider';
+import { InvoiceContext } from '../store/InvoiceProvider';
 import { ADD_DETAILS, ADD_INVOICE, EDIT_DETAILS, UPDATE_DETAILS, RESET_DETAILS, UPDATE_INVOICE } from '../config/actionTypes';
-
-const mockCustomerData = [
-  // {
-  //   id: '1',
-  //   dueDate: '20/10/2018',
-  //   customer: 'Terry Ltd',
-  //   qty: 15,
-  //   description: 'Building materials',
-  //   unitCost: 0.75,
-  //   amount: '25.99',
-  // },
-  // {
-  //   id: '2',
-  //   dueDate: '20/10/2018',
-  //   customer: 'Terry Ltd',
-  //   qty: 20,
-  //   description: 'Building materials',
-  //   unitCost: 0.25,
-  //   amount: '50.00',
-  // },
-  // {
-  //   id: '3',
-  //   dueDate: '20/10/2018',
-  //   customer: 'Terry Ltd',
-  //   qty: 1000,
-  //   description: 'Building materials',
-  //   unitCost: 10.5,
-  //   amount: '99.27',
-  // },
-  // {
-  //   id: '4',
-  //   dueDate: '20/10/2018',
-  //   customer: 'Terry Ltd',
-  //   qty: 100,
-  //   description: 'Building materials',
-  //   unitCost: 0.95,
-  //   amount: '101.20',
-  // },
-];
 
 const styles = StyleSheet.create({
   container: {
@@ -93,7 +52,6 @@ export default function InvoiceCreateScreen({ navigation, route }) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    console.log('i run on first run');
     if (editMode) {
       const singleInvoice = data.invoices.byId[id];
       dispatch({
@@ -105,7 +63,6 @@ export default function InvoiceCreateScreen({ navigation, route }) {
       });
     }
     return () => {
-      console.log('ill run at the end and delete the array...');
       dispatch({ type: RESET_DETAILS });
     };
   }, []);
@@ -127,7 +84,6 @@ export default function InvoiceCreateScreen({ navigation, route }) {
   };
 
   const saveInvoice = () => {
-    console.log('saving invoice');
     const invoice = {
       id: invoiceNumber,
       clientName,
@@ -141,7 +97,6 @@ export default function InvoiceCreateScreen({ navigation, route }) {
   };
 
   const updateInvoice = () => {
-    console.log('updating Invoice');
     const updatedInvoice = {
       id: invoiceNumber,
       clientName,

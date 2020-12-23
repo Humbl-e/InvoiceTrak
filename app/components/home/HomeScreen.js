@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import { windowHeight, windowWidth } from '../../utilities/Dimensions';
+import { View, StyleSheet } from 'react-native';
+import { TabView, TabBar } from 'react-native-tab-view';
+import { windowWidth } from '../../utilities/Dimensions';
 import AddButton from '../global/AddButton';
 import { InvoicesAllTab, InvoicesPaidTab, InvoicesUnpaidTab } from '../tabs';
 import Colors from '../../styles/Colors';

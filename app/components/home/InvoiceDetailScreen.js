@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, Alert } from 'react-native';
-import { windowWidth } from '../../utilities/Dimensions';
-import { Container, Form, Item, Input, Label, Separator } from 'native-base';
+import { View, Text, StyleSheet } from 'react-native';
+import { Container, Form, Item, Input, Label } from 'native-base';
 import FormButton from '../global/FormButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import Colors from '../../styles/Colors';
@@ -42,10 +41,6 @@ const styles = StyleSheet.create({
 
 export default function InvoiceDetailScreen({ navigation, route }) {
   const { item, index } = route.params;
-
-  // console.log('item is: ', item);
-  console.log('index is: ', index);
-
   const [description, setDescription] = useState(item?.description ?? '');
   const [receivedDesc, setReceivedDesc] = useState(item ? true : false);
   const [receivedUc, setReceivedUc] = useState(item ? true : false);

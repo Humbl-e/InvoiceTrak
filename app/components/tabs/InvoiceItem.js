@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function InvoiceItem({ item, index, onPress }) {
+export default function InvoiceItem({ item, onPress }) {
   const { data } = useContext(InvoiceContext);
   const invoice = data.invoices.byId;
   const invoiceDetails = invoice[item].details;
