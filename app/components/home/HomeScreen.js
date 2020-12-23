@@ -13,14 +13,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const initialLayout = { width: windowWidth, height: windowHeight };
+const initialLayout = { width: windowWidth, height: 0 };
 
 const renderTabBar = (props) => (
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: Colors.white }}
     style={{ backgroundColor: Colors.slate }}
-    tabStyle={{ flex: 1, paddingHorizontal: -5 }}
+    tabStyle={{ flex: 1, paddingHorizontal: -5, zIndex: 2 }}
   />
 );
 

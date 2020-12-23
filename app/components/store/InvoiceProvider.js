@@ -46,9 +46,15 @@ const invoiceReducer = (state, action) => {
 
     case actionType.UPDATE_INVOICE:
       const id = action.payload.id;
-      state.invoices.byId[id] = action.payload;
       return {
         ...state,
+        invoices: {
+          ...state.invoices,
+          byId: {
+            ...state.invoices.byId,
+            [id]: action.payload,
+          },
+        },
       };
 
     case actionType.ADD_DETAILS:
