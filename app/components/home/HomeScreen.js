@@ -37,11 +37,11 @@ export default function HomeScreen({ navigation }) {
   const renderScene = ({ route }) => {
     switch (route.key) {
       case 'first':
-        return <InvoicesAllTab navigation={navigation} />;
+        return <InvoicesAllTab />;
       case 'second':
-        return <InvoicesUnpaidTab navigation={navigation} />;
+        return <InvoicesUnpaidTab />;
       case 'third':
-        return <InvoicesPaidTab navigation={navigation} />;
+        return <InvoicesPaidTab />;
       default:
         return null;
     }

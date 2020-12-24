@@ -14,8 +14,7 @@ LogBox.ignoreLogs(['VirtualizedLists should never be nested', 'Non-serializable 
 
 export default function App() {
   const navigationRef = React.createRef();
-  const { data, dispatch } = useContext(InvoiceContext);
-  const loading = data.loading;
+  const { data, loaded } = useContext(InvoiceContext);
 
   useEffect(() => {
     Icon.loadFont();
@@ -24,13 +23,17 @@ export default function App() {
     FontAwesomeIcons.loadFont();
   }, []);
 
+  if (!loaded) {
+    return <Loading loading={!loaded} />;
+  }
+
   return (
     <View style={styles.container} accessibility="app">
       <StatusBar barStyle={'light-content'} />
       <NavigationContainer ref={navigationRef}>
         <HomeStack />
+        <Loading loading={!loaded} />
       </NavigationContainer>
-      <Loading loading={loading} />
     </View>
   );
 }

@@ -1,4 +1,5 @@
-import React, { createContext, useReducer, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { createContext, useState, useReducer, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as actionType from '../config/actionTypes';
 
@@ -11,7 +12,7 @@ export const set_Loading = (loading) => {
   };
 };
 
-const initalState = {
+const initialState = {
   invoices: {
     byId: {},
     allIds: [],
@@ -19,11 +20,13 @@ const initalState = {
   invoiceDetails: [],
   invoiceTotal: '0.00',
   lastInvoice: '00001',
-  loading: false,
 };
 
 const invoiceReducer = (state, action) => {
   switch (action.type) {
+    case actionType.REHYDRATE_STORE:
+      return { ...action.storage };
+
     case actionType.ADD_INVOICE:
       const zeroPad = (num, places) => String(num).padStart(places, '0');
       const invoiceNumber = zeroPad(Number.parseInt(action.payload.id) + 1, 5);
@@ -41,8 +44,16 @@ const invoiceReducer = (state, action) => {
       };
 
     case actionType.REMOVE_INVOICE:
-      console.log(action.id);
-      return state.filter((invoice) => invoice.id !== action.id);
+      const allIDS = state.invoices.allIds;
+      const byID = { ...state.invoices.byId };
+      delete byID[action.invoiceId];
+      return {
+        ...state,
+        invoices: {
+          byId: byID,
+          allIds: allIDS.filter((e) => e !== action.invoiceId),
+        },
+      };
 
     case actionType.UPDATE_INVOICE:
       const id = action.payload.id;
@@ -108,13 +119,44 @@ const invoiceReducer = (state, action) => {
   }
 };
 
+const getData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('invoices');
+    return jsonValue ? JSON.parse(jsonValue) : initialState;
+  } catch (e) {
+    console.log('failed to get Data object');
+  }
+};
+
+const storeData = async (value) => {
+  try {
+    const jsonValue = JSON.stringify(value);
+    await AsyncStorage.setItem('invoices', jsonValue);
+  } catch (e) {
+    console.log('error saving');
+  }
+};
+
 export default function InvoiceProvider(props) {
-  const [data, dispatch] = useReducer(invoiceReducer, initalState);
+  const [loaded, setLoaded] = useState(false);
+  const [data, dispatch] = useReducer(invoiceReducer, initialState);
 
-  //   useEffect(() => {
-  // console.log(props.children);
-  //     AsyncStorage.setItem('invoices', JSON.stringify(invoices));
-  //   }, [invoices]);
+  // Loading initial Satte
+  useEffect(() => {
+    async function fetchAsyncStore() {
+      const storage = await getData();
+      dispatch({ type: 'REHYDRATE_STORE', storage });
+      setLoaded(true);
+    }
+    fetchAsyncStore();
+  }, []);
 
-  return <InvoiceContext.Provider value={{ data, dispatch }}>{props.children}</InvoiceContext.Provider>;
+  useEffect(() => {
+    if (data.invoices.allIds.length > 0 && data.invoiceDetails?.length < 1 && loaded) {
+      console.log('storing data,', data);
+      storeData(data);
+    }
+  }, [data]);
+
+  return <InvoiceContext.Provider value={{ data, loaded, dispatch }}>{props.children}</InvoiceContext.Provider>;
 }

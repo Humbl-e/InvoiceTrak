@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, ScrollView } from 'react-native';
 import Colors from '../../styles/Colors';
 import { InvoiceContext } from '../store/InvoiceProvider';
 import InvoiceItem from './InvoiceItem';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   list: {
@@ -27,8 +28,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function InvoicesPaidTab({ navigation }) {
+export default function InvoicesPaidTab() {
   const [invoicesTotal, setInvoicesTotal] = useState(0);
+  const navigation = useNavigation();
   const [listData, setListData] = useState([]);
 
   const { data } = useContext(InvoiceContext);

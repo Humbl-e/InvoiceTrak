@@ -30,15 +30,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function InvoiceItem({ item, onPress }) {
+export default function InvoiceItem({ item, onPress, onLongPress }) {
   const { data } = useContext(InvoiceContext);
   const invoice = data.invoices.byId;
-  const invoiceDetails = invoice[item].details;
+  const invoiceDetails = invoice[item]?.details;
   const [stringDetails, setStringDetails] = useState('');
 
   useEffect(() => {
     let stringArray = [];
-    invoiceDetails.forEach((element) => {
+    invoiceDetails?.forEach((element) => {
       stringArray.push(element.description);
     });
     const stringifiedDetails = stringArray.join(', ');
@@ -48,14 +48,14 @@ export default function InvoiceItem({ item, onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
-        <Text style={styles.text}>{invoice[item].id}</Text>
+        <Text style={styles.text}>{invoice[item]?.id}</Text>
         <View style={styles.row}>
           <View style={{ flex: 1, maxWidth: windowWidth / 2 + 40 }}>
             <Text style={styles.textTotal} numberOfLines={1}>
-              {invoice[item].clientName}
+              {invoice[item]?.clientName}
             </Text>
           </View>
-          <Text style={styles.textTotal} numberOfLines={1}>{`£${invoice[item].total}`}</Text>
+          <Text style={styles.textTotal} numberOfLines={1}>{`£${invoice[item]?.total}`}</Text>
         </View>
         <View style={{ flexDirection: 'row', maxWidth: windowWidth / 2 + 50 }}>
           <Text style={[styles.text]} numberOfLines={1}>

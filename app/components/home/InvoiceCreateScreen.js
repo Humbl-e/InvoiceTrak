@@ -1,14 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
-import { Container, Form, Item, Input, Label, Separator } from 'native-base';
+import React, { useState, useEffect, useContext, useLayoutEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { Container, Form, Item, Input, Label, Separator, Icon } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Colors from '../../styles/Colors';
 import InvoiceListItem from '../global/InvoiceListItem';
 import FormButton from '../global/FormButton';
 import DateHolder from '../global/DateHolder';
 import { InvoiceContext } from '../store/InvoiceProvider';
-import { ADD_DETAILS, ADD_INVOICE, EDIT_DETAILS, UPDATE_DETAILS, RESET_DETAILS, UPDATE_INVOICE } from '../config/actionTypes';
+import {
+  ADD_DETAILS,
+  ADD_INVOICE,
+  EDIT_DETAILS,
+  UPDATE_DETAILS,
+  RESET_DETAILS,
+  UPDATE_INVOICE,
+  REMOVE_INVOICE,
+} from '../config/actionTypes';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,7 +45,6 @@ const styles = StyleSheet.create({
 
 export default function InvoiceCreateScreen({ navigation, route }) {
   const { data, dispatch } = useContext(InvoiceContext);
-
   const editMode = route.params?.editMode;
   const id = route.params?.id;
 
@@ -46,10 +53,25 @@ export default function InvoiceCreateScreen({ navigation, route }) {
   const parts = data.invoices.byId[id]?.date?.split('/');
   const dt = parts ? new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10)) : new Date();
 
-  const [paid, setPaid] = useState(editMode ? data.invoices.byId[id].isPaid : false);
-  const [clientName, setClientName] = useState(editMode ? data.invoices.byId[id].clientName : '');
+  const [paid, setPaid] = useState(editMode ? data.invoices.byId[id]?.isPaid : false);
+  const [clientName, setClientName] = useState(editMode ? data.invoices.byId[id]?.clientName : '');
   const [date, setDate] = useState(editMode ? new Date(dt) : new Date());
   const [show, setShow] = useState(false);
+
+  // useLayoutEffect(() => {
+  //   if (editMode) {
+  //     navigation.setOptions({
+  //       headerRight: () => (
+  //         <TouchableOpacity style={{ marginHorizontal: 11, marginVertical: 3, alignItems: 'center' }} onPress={openDialog}>
+  //           <Icon
+  //             name="trash-outline"
+  //             style={{ width: 24, height: 24, margin: 3, color: Colors.white, fontSize: 24, overflow: 'hidden' }}
+  //           />
+  //         </TouchableOpacity>
+  //       ),
+  //     });
+  //   }
+  // }, [navigation]);
 
   useEffect(() => {
     if (editMode) {
@@ -67,7 +89,26 @@ export default function InvoiceCreateScreen({ navigation, route }) {
     };
   }, []);
 
-  // console.log('invoice', data.invoices.byId[id]);
+  // const openDialog = () =>
+  //   Alert.alert(
+  //     'Delete Invoice',
+  //     'Are you sure you wish to delete this invoice',
+  //     [
+  //       {
+  //         text: 'Cancel',
+  //         onPress: () => console.log('Cancel Pressed'),
+  //         style: 'cancel',
+  //       },
+  //       {
+  //         text: 'OK',
+  //         onPress: () => {
+  //           navigation.goBack();
+  //           dispatch({ type: REMOVE_INVOICE, invoiceId: id });
+  //         },
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
 
   const changePaid = () => {
     setPaid((prevState) => !prevState);
