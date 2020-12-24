@@ -1,10 +1,11 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import { windowHeight, windowWidth } from '../../utilities/Dimensions';
+import React, { useContext } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { TabView, TabBar } from 'react-native-tab-view';
+import { windowWidth } from '../../utilities/Dimensions';
 import AddButton from '../global/AddButton';
 import { InvoicesAllTab, InvoicesPaidTab, InvoicesUnpaidTab } from '../tabs';
 import Colors from '../../styles/Colors';
+import { InvoiceContext } from '../store/InvoiceProvider';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,38 +13,42 @@ const styles = StyleSheet.create({
   },
 });
 
-const FirstRoute = () => <InvoicesAllTab />;
-
-const SecondRoute = () => <InvoicesUnpaidTab />;
-const ThirdRoute = () => <InvoicesPaidTab />;
-
-const initialLayout = { width: windowWidth, height: windowHeight };
+const initialLayout = { width: windowWidth, height: 0 };
 
 const renderTabBar = (props) => (
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: Colors.white }}
     style={{ backgroundColor: Colors.slate }}
-    tabStyle={{ flex: 1, paddingHorizontal: -5 }}
+    tabStyle={{ flex: 1, paddingHorizontal: -5, zIndex: 2 }}
   />
 );
 
 export default function HomeScreen({ navigation }) {
   const [index, setIndex] = React.useState(0);
+  const { data, dispatch } = useContext(InvoiceContext);
+
   const [routes] = React.useState([
     { key: 'first', title: 'All' },
     { key: 'second', title: 'Outstanding' },
     { key: 'third', title: 'Paid' },
   ]);
 
-  const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-    third: ThirdRoute,
-  });
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case 'first':
+        return <InvoicesAllTab />;
+      case 'second':
+        return <InvoicesUnpaidTab />;
+      case 'third':
+        return <InvoicesPaidTab />;
+      default:
+        return null;
+    }
+  };
 
   const goToInvoice = () => {
-    navigation.navigate('Invoice');
+    navigation.navigate('Add Invoice');
   };
 
   return (
