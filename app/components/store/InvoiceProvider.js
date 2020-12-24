@@ -145,6 +145,7 @@ export default function InvoiceProvider(props) {
   useEffect(() => {
     async function fetchAsyncStore() {
       const storage = await getData();
+      console.log('storage data set,');
       dispatch({ type: 'REHYDRATE_STORE', storage });
       setLoaded(true);
     }
@@ -152,7 +153,8 @@ export default function InvoiceProvider(props) {
   }, []);
 
   useEffect(() => {
-    if (data.invoices.allIds.length > 0 && data.invoiceDetails?.length < 1 && loaded) {
+    console.log('just running onDataChange,');
+    if (data.invoiceDetails?.length < 1 && loaded) {
       console.log('storing data,', data);
       storeData(data);
     }

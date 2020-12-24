@@ -58,20 +58,20 @@ export default function InvoiceCreateScreen({ navigation, route }) {
   const [date, setDate] = useState(editMode ? new Date(dt) : new Date());
   const [show, setShow] = useState(false);
 
-  // useLayoutEffect(() => {
-  //   if (editMode) {
-  //     navigation.setOptions({
-  //       headerRight: () => (
-  //         <TouchableOpacity style={{ marginHorizontal: 11, marginVertical: 3, alignItems: 'center' }} onPress={openDialog}>
-  //           <Icon
-  //             name="trash-outline"
-  //             style={{ width: 24, height: 24, margin: 3, color: Colors.white, fontSize: 24, overflow: 'hidden' }}
-  //           />
-  //         </TouchableOpacity>
-  //       ),
-  //     });
-  //   }
-  // }, [navigation]);
+  useLayoutEffect(() => {
+    if (editMode) {
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity style={{ marginHorizontal: 11, marginVertical: 3, alignItems: 'center' }} onPress={openDialog}>
+            <Icon
+              name="trash-outline"
+              style={{ width: 24, height: 24, margin: 3, color: Colors.white, fontSize: 24, overflow: 'hidden' }}
+            />
+          </TouchableOpacity>
+        ),
+      });
+    }
+  }, [navigation]);
 
   useEffect(() => {
     if (editMode) {
@@ -89,26 +89,26 @@ export default function InvoiceCreateScreen({ navigation, route }) {
     };
   }, []);
 
-  // const openDialog = () =>
-  //   Alert.alert(
-  //     'Delete Invoice',
-  //     'Are you sure you wish to delete this invoice',
-  //     [
-  //       {
-  //         text: 'Cancel',
-  //         onPress: () => console.log('Cancel Pressed'),
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: 'OK',
-  //         onPress: () => {
-  //           navigation.goBack();
-  //           dispatch({ type: REMOVE_INVOICE, invoiceId: id });
-  //         },
-  //       },
-  //     ],
-  //     { cancelable: false }
-  //   );
+  const openDialog = () =>
+    Alert.alert(
+      'Delete Invoice',
+      'Are you sure you wish to delete this invoice',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.goBack();
+            dispatch({ type: REMOVE_INVOICE, invoiceId: id });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
 
   const changePaid = () => {
     setPaid((prevState) => !prevState);

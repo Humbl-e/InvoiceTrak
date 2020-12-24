@@ -7,4 +7,5 @@ export default {
   red: '#D2222D',
   green: '#629632',
   amber: '#FFBF00',
+  turqoise: '#668B8B',
 };

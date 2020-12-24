@@ -4,8 +4,15 @@ import Colors from '../../styles/Colors';
 import { InvoiceContext } from '../store/InvoiceProvider';
 import InvoiceItem from './InvoiceItem';
 import { useNavigation } from '@react-navigation/native';
+import { Icon } from 'native-base';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 25,
+  },
   list: {
     margin: 10,
     paddingBottom: 25,
@@ -26,8 +33,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.slate,
   },
+  emptyText: {
+    fontSize: 18,
+    color: Colors.turqoise,
+    textAlign: 'center',
+  },
 });
 
+const renderEmptyComponent = () => {
+  return (
+    <View style={styles.container}>
+      <Icon name="cash-outline" style={{ fontSize: 75, color: Colors.slate, margin: 10 }} />
+      <Text style={styles.emptyText}>{'All invoices that you mark as paid will show up here.\n You have no paid invoices.'}</Text>
+    </View>
+  );
+};
 export default function InvoicesPaidTab() {
   const [invoicesTotal, setInvoicesTotal] = useState(0);
   const navigation = useNavigation();
@@ -69,15 +89,17 @@ export default function InvoicesPaidTab() {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <FlatList
         style={styles.list}
+        contentContainerStyle={{ flexGrow: 1 }}
         scrollEnabled={false}
         data={listData}
         extraData={listData}
         renderItem={renderItem}
         keyExtractor={(item) => item.toString()}
-        ListHeaderComponent={renderHeader}
+        ListHeaderComponent={listData.length > 0 ? renderHeader : null}
+        ListEmptyComponent={renderEmptyComponent}
       />
     </ScrollView>
   );
