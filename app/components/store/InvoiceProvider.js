@@ -47,11 +47,23 @@ const invoiceReducer = (state, action) => {
       const allIDS = state.invoices.allIds;
       const byID = { ...state.invoices.byId };
       delete byID[action.invoiceId];
+      const newAllIDS = allIDS.filter((e) => e !== action.invoiceId);
+      if (newAllIDS.length < 1) {
+        console.log('cleared all invoices');
+        return {
+          ...state,
+          invoices: {
+            byId: byID,
+            allIds: newAllIDS,
+          },
+          lastInvoice: '00001',
+        };
+      }
       return {
         ...state,
         invoices: {
           byId: byID,
-          allIds: allIDS.filter((e) => e !== action.invoiceId),
+          allIds: newAllIDS,
         },
       };
 
