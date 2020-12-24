@@ -89,10 +89,14 @@ export default function InvoiceCreateScreen({ navigation, route }) {
     };
   }, []);
 
-  const openDialog = () =>
+  const openDialog = () => {
+    const resetInvoices = data.invoices.allIds.length === 1;
+    const resetText =
+      'Are you sure you wish to delete this invoice? This will reset the invoice number and all data will be lost. Proceed with caution.';
+    const deleteText = 'Are you sure you wish to delete this invoice?';
     Alert.alert(
       'Delete Invoice',
-      'Are you sure you wish to delete this invoice',
+      resetInvoices ? resetText : deleteText,
       [
         {
           text: 'Cancel',
@@ -100,15 +104,17 @@ export default function InvoiceCreateScreen({ navigation, route }) {
           style: 'cancel',
         },
         {
-          text: 'OK',
+          text: resetInvoices ? 'DELETE' : 'OK',
           onPress: () => {
             navigation.goBack();
             dispatch({ type: REMOVE_INVOICE, invoiceId: id });
           },
+          style: resetInvoices ? 'default' : 'destructive',
         },
       ],
       { cancelable: false }
     );
+  };
 
   const changePaid = () => {
     setPaid((prevState) => !prevState);
