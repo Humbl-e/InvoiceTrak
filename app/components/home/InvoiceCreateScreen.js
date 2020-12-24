@@ -57,6 +57,7 @@ export default function InvoiceCreateScreen({ navigation, route }) {
   const [clientName, setClientName] = useState(editMode ? data.invoices.byId[id]?.clientName : '');
   const [date, setDate] = useState(editMode ? new Date(dt) : new Date());
   const [show, setShow] = useState(false);
+  const [receivedName, setReceivedName] = useState(editMode ? true : false);
 
   useLayoutEffect(() => {
     if (editMode) {
@@ -191,10 +192,17 @@ export default function InvoiceCreateScreen({ navigation, route }) {
             <Label>Invoice Number</Label>
             <Input value={invoiceNumber} editable={false} />
           </Item>
-          <Item inlineLabel error={!clientName}>
+          <Item inlineLabel>
             <Label>Client Name</Label>
-            <Input value={clientName} onChangeText={setClientName} />
+            <Input
+              placeholder={'ABC Ltd...'}
+              placeholderTextColor={Colors.lightGrey}
+              value={clientName}
+              onChangeText={setClientName}
+              onBlur={() => setReceivedName(true)}
+            />
           </Item>
+          {!clientName && receivedName && <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 15 }}>Name is required</Text>}
           <Item inlineLabel last>
             <Label>Date</Label>
             <DateHolder date={date} onPress={showMode} />

@@ -127,7 +127,7 @@ export default function InvoiceDetailScreen({ navigation, route }) {
           {(!unitCost || Number.parseFloat(unitCost) <= 0) && receivedUc && (
             <Text style={{ color: Colors.red, fontSize: 12, paddingStart: 10 }}>Unit Cost is required</Text>
           )}
-          <Item inlineLabel last>
+          <Item inlineLabel>
             <Label>Quantity:</Label>
             <Input placeholder="0" placeholderTextColor={Colors.lightGrey} onChangeText={setQty} value={qty} keyboardType="decimal-pad" />
           </Item>
