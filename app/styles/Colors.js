@@ -8,4 +8,5 @@ export default {
   green: '#629632',
   amber: '#FFBF00',
   turqoise: '#668B8B',
+  slateDark: '#203737',
 };
