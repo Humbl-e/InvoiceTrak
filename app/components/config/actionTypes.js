@@ -12,3 +12,4 @@ export const SET_INVOICE_TOTAL = 'SET_INVOICE_TOTAL';
 export const SET_LOADING = 'SET_LOADING';
 
 export const REHYDRATE_STORE = 'REHYDRATE_STORE';
+export const RESET_DATA = 'RESET_DATA';

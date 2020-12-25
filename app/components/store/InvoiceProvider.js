@@ -27,6 +27,9 @@ const invoiceReducer = (state, action) => {
     case actionType.REHYDRATE_STORE:
       return { ...action.storage };
 
+    case actionType.RESET_DATA:
+      return { ...initialState };
+
     case actionType.ADD_INVOICE:
       const zeroPad = (num, places) => String(num).padStart(places, '0');
       const invoiceNumber = zeroPad(Number.parseInt(action.payload.id) + 1, 5);
